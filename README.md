@@ -56,16 +56,27 @@ The application follows a **4-layer Clean Architecture**:
 
 ## Tech Stack
 
-- **Backend**: Python 3.11+
+### Backend
+- **Language**: Python 3.11+
 - **Framework**: FastAPI
 - **Media Processing**: FFmpeg, OpenCV
 - **Database**: In-memory (MVP) / PostgreSQL (production-ready)
 - **Architecture**: DDD + Clean Architecture
 
+### Frontend
+- **Framework**: React 18 + TypeScript
+- **Build Tool**: Vite
+- **Styling**: Tailwind CSS
+- **Routing**: React Router v6
+- **State Management**: Zustand
+- **HTTP Client**: Axios
+- **Icons**: Lucide React
+
 ## Features
 
 ### MVP Features
 
+#### Backend API
 - ✅ **Project Management**: Create, read, delete video editing projects
 - ✅ **Timeline Management**: Add layers (video, image, audio) with positioning
 - ✅ **Effects System**:
@@ -76,6 +87,15 @@ The application follows a **4-layer Clean Architecture**:
   - Crop effect
 - ✅ **Export**: Render projects to MP4, MOV, AVI, WEBM, GIF
 - ✅ **Plugin Architecture**: Extensible effect system via Strategy pattern
+
+#### Frontend UI
+- ✅ **Project Dashboard**: View, create, and manage projects
+- ✅ **Visual Timeline Editor**: Drag-and-drop interface for layers
+- ✅ **Effects Panel**: Apply and configure effects with real-time controls
+- ✅ **Layer Management**: Add/remove/configure video, image, and audio layers
+- ✅ **Resolution Presets**: Quick selection for Instagram, YouTube, TikTok, etc.
+- ✅ **Export Interface**: Export projects with format selection (MP4, MOV, AVI, WebM, GIF)
+- ✅ **Responsive Design**: Works on desktop and tablet devices
 
 ### Design Patterns Used
 
@@ -243,6 +263,54 @@ video-editor/
    - API Documentation: http://localhost:8000/docs
    - Alternative Docs: http://localhost:8000/redoc
    - Health Check: http://localhost:8000/health
+
+### Frontend Setup
+
+1. **Navigate to frontend directory**
+   ```bash
+   cd frontend
+   ```
+
+2. **Install dependencies**
+   ```bash
+   npm install
+   ```
+
+3. **Start development server**
+   ```bash
+   npm run dev
+   ```
+
+4. **Access the UI**
+   - Frontend Application: http://localhost:3000
+   - The frontend proxies API requests to http://localhost:8000
+
+5. **Build for production**
+   ```bash
+   npm run build
+   npm run preview  # Preview production build
+   ```
+
+### Running Both Backend and Frontend
+
+Open two terminal windows:
+
+**Terminal 1 (Backend)**:
+```bash
+# From project root
+python main.py
+```
+
+**Terminal 2 (Frontend)**:
+```bash
+# From project root
+cd frontend
+npm run dev
+```
+
+Then access:
+- **Frontend UI**: http://localhost:3000
+- **Backend API**: http://localhost:8000/docs
 
 ## API Usage
 
