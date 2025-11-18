@@ -6,16 +6,26 @@ from datetime import datetime
 from domain.shared.enums import MediaType
 
 
+class ResolutionSchema(BaseModel):
+    """Schema for resolution."""
+    width: int
+    height: int
+
+
+class DurationSchema(BaseModel):
+    """Schema for duration."""
+    seconds: float
+
+
 class MediaAssetResponse(BaseModel):
     """Response schema for media asset."""
     id: str
-    name: str
-    media_type: MediaType
+    filename: str
+    media_type: str
     file_path: str
     file_size: int
     duration: Optional[float] = None
-    width: Optional[int] = None
-    height: Optional[int] = None
+    resolution: Optional[ResolutionSchema] = None
     created_at: datetime
 
     class Config:
@@ -23,13 +33,15 @@ class MediaAssetResponse(BaseModel):
         json_schema_extra = {
             "example": {
                 "id": "123e4567-e89b-12d3-a456-426614174000",
-                "name": "workout_clip.mp4",
+                "filename": "workout_clip.mp4",
                 "media_type": "video",
                 "file_path": "/storage/media/videos/20250115_103000_abc12345.mp4",
                 "file_size": 15728640,
                 "duration": 15.5,
-                "width": 1920,
-                "height": 1080,
+                "resolution": {
+                    "width": 1920,
+                    "height": 1080
+                },
                 "created_at": "2025-01-15T10:30:00"
             }
         }

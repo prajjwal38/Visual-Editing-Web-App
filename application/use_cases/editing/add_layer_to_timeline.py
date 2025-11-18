@@ -39,7 +39,9 @@ class AddLayerToTimelineUseCase:
         duration = Duration(seconds=dto.duration)
         position = Position(x=dto.position_x, y=dto.position_y)
 
-        if dto.layer_type == LayerType.VIDEO and dto.media_asset_id:
+        if dto.layer_type == LayerType.VIDEO:
+            if not dto.media_asset_id:
+                raise ValueError("Video layers require a media asset")
             layer = Layer.create_video_layer(
                 name=dto.name,
                 media_asset_id=dto.media_asset_id,
@@ -47,7 +49,9 @@ class AddLayerToTimelineUseCase:
                 duration=duration,
                 position=position
             )
-        elif dto.layer_type == LayerType.IMAGE and dto.media_asset_id:
+        elif dto.layer_type == LayerType.IMAGE:
+            if not dto.media_asset_id:
+                raise ValueError("Image layers require a media asset")
             layer = Layer.create_image_layer(
                 name=dto.name,
                 media_asset_id=dto.media_asset_id,
@@ -55,15 +59,24 @@ class AddLayerToTimelineUseCase:
                 duration=duration,
                 position=position
             )
-        elif dto.layer_type == LayerType.AUDIO and dto.media_asset_id:
+        elif dto.layer_type == LayerType.AUDIO:
+            if not dto.media_asset_id:
+                raise ValueError("Audio layers require a media asset")
             layer = Layer.create_audio_layer(
                 name=dto.name,
                 media_asset_id=dto.media_asset_id,
                 start_time=start_time,
                 duration=duration
             )
+        elif dto.layer_type == LayerType.TEXT:
+            layer = Layer.create_text_layer(
+                name=dto.name,
+                start_time=start_time,
+                duration=duration,
+                position=position
+            )
         else:
-            raise ValueError(f"Invalid layer type or missing media asset")
+            raise ValueError(f"Invalid layer type: {dto.layer_type}")
 
         # Add to timeline
         project.timeline.add_layer(layer)

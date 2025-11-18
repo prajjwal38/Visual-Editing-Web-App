@@ -5,7 +5,10 @@ from typing import List
 from presentation.schemas.project_schema import (
     ProjectCreateRequest,
     ProjectUpdateRequest,
-    ProjectResponse
+    ProjectResponse,
+    ResolutionSchema,
+    TimelineSchema,
+    DurationSchema
 )
 from presentation.api.dependencies import (
     get_create_project_use_case,
@@ -30,8 +33,8 @@ async def create_project(
         dto = CreateProjectDTO(
             name=request.name,
             description=request.description,
-            resolution_width=request.resolution_width,
-            resolution_height=request.resolution_height,
+            resolution_width=request.resolution.width,
+            resolution_height=request.resolution.height,
             fps=request.fps
         )
 
@@ -42,13 +45,17 @@ async def create_project(
             name=result.name,
             description=result.description,
             status=result.status,
-            resolution_width=result.resolution_width,
-            resolution_height=result.resolution_height,
+            resolution=ResolutionSchema(
+                width=result.resolution_width,
+                height=result.resolution_height
+            ),
             fps=result.fps,
             created_at=result.created_at,
             updated_at=result.updated_at,
-            layer_count=result.layer_count,
-            total_duration=result.total_duration
+            timeline=TimelineSchema(
+                layers=[],
+                total_duration=DurationSchema(seconds=result.total_duration)
+            )
         )
     except ValueError as e:
         raise HTTPException(status_code=400, detail=str(e))
@@ -76,13 +83,17 @@ async def get_project(
             name=result.name,
             description=result.description,
             status=result.status,
-            resolution_width=result.resolution_width,
-            resolution_height=result.resolution_height,
+            resolution=ResolutionSchema(
+                width=result.resolution_width,
+                height=result.resolution_height
+            ),
             fps=result.fps,
             created_at=result.created_at,
             updated_at=result.updated_at,
-            layer_count=result.layer_count,
-            total_duration=result.total_duration
+            timeline=TimelineSchema(
+                layers=[],
+                total_duration=DurationSchema(seconds=result.total_duration)
+            )
         )
     except HTTPException:
         raise
@@ -107,13 +118,19 @@ async def list_projects(
                 name=project.name,
                 description=project.description,
                 status=project.status,
-                resolution_width=project.timeline.resolution.width,
-                resolution_height=project.timeline.resolution.height,
+                resolution=ResolutionSchema(
+                    width=project.timeline.resolution.width,
+                    height=project.timeline.resolution.height
+                ),
                 fps=project.timeline.fps,
                 created_at=project.created_at,
                 updated_at=project.updated_at,
-                layer_count=len(project.timeline.layers),
-                total_duration=project.timeline.calculate_total_duration().seconds
+                timeline=TimelineSchema(
+                    layers=[],
+                    total_duration=DurationSchema(
+                        seconds=project.timeline.calculate_total_duration().seconds
+                    )
+                )
             )
             for project in projects
         ]

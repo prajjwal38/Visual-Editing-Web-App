@@ -95,6 +95,25 @@ class Layer:
             media_asset_id=media_asset_id
         )
 
+    @classmethod
+    def create_text_layer(
+        cls,
+        name: str,
+        start_time: Duration,
+        duration: Duration,
+        position: Position = None
+    ) -> "Layer":
+        """Factory method to create a text layer."""
+        return cls(
+            id=str(uuid.uuid4()),
+            name=name,
+            layer_type=LayerType.TEXT,
+            start_time=start_time,
+            duration=duration,
+            media_asset_id=None,
+            position=position or Position.origin()
+        )
+
     @property
     def end_time(self) -> Duration:
         """Calculate the end time of the layer."""

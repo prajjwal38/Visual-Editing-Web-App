@@ -95,6 +95,33 @@ export const mediaApi = {
     const response = await api.get<MediaAsset[]>('/media/');
     return response.data;
   },
+
+  upload: async (
+    file: File,
+    mediaType: string,
+    metadata?: { duration?: number; width?: number; height?: number }
+  ): Promise<MediaAsset> => {
+    const formData = new FormData();
+    formData.append('file', file);
+    formData.append('media_type', mediaType);
+
+    if (metadata?.duration !== undefined) {
+      formData.append('duration', metadata.duration.toString());
+    }
+    if (metadata?.width !== undefined) {
+      formData.append('width', metadata.width.toString());
+    }
+    if (metadata?.height !== undefined) {
+      formData.append('height', metadata.height.toString());
+    }
+
+    const response = await api.post<MediaAsset>('/media/upload', formData, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+    return response.data;
+  },
 };
 
 export default api;
